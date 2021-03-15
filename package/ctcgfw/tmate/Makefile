@@ -10,10 +10,9 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tmate
 PKG_VERSION:=2.4.0
-PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/tmate-io/tmate.git
+PKG_SOURCE_REPO:=tmate-io/tmate
 PKG_SOURCE_DATE:=2020-04-25
 PKG_SOURCE_VERSION:=cbec43f56dfb48c2fb6e00faa2cb85443d4b7d8f
 PKG_MIRROR_HASH:=8622869c8acfa147275d4658fbc2c9afdc9dde45d5d07fc4a4cb51ec740a8ac7
@@ -24,10 +23,9 @@ PKG_MAINTAINER:=CN_SZTL <cnsztl@immortalwrt.org>
 
 PKG_BUILD_DEPENDS:=ncurses
 PKG_FIXUP:=autoreconf
-PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 
-include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/package-immortalwrt.mk
 
 define Package/tmate
   SECTION:=net
