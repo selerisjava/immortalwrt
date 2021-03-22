@@ -1,4 +1,4 @@
-name: R2S
+name: nanopi_r2s
 
 on:
   push:
