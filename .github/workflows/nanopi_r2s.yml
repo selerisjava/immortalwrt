@@ -22,6 +22,9 @@ jobs:
       run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+    - name: configuration file
+      run: |
+          make defconfig
     - name: Make download
       run: |
           make download -j8
