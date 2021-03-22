@@ -1,0 +1,48 @@
+name: nanopi_r2s
+
+on:
+  push:
+    branches: [ openwrt-18.06,1806-k54-r2s-oc ]
+  pull_request:
+    branches: [ 1806-k54-r2s-oc ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: install 
+      run: |
+          sudo -E apt-get update -y
+          sudo -E apt-get full-upgrade -y
+          sudo -E apt-get install -y build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libreadline-dev libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint ccache curl wget vim nano python python3 python-pip python3-pip python-ply python3-ply haveged lrzsz device-tree-compiler scons antlr3 gperf intltool rsync     
+    - name: Update feeds
+      run: |
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+    - name: Make download
+      run: |
+          make download -j8
+          find dl -size -1024c -exec rm -f {} \;
+          
+    - name: Compile firmware
+      run: |
+          make -j$(nproc) || make -j1 V=s
+          echo "======================="
+          echo "Space usage:"
+          echo "======================="
+          df -h
+          echo "======================="
+          du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
+          du -h --max-depth=1 ./build_dir
+          du -h --max-depth=1 ./bin
+    - name: Prepare artifact
+      run: find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: OpenWrt firmware
+        path: ./bin/targets/ 
